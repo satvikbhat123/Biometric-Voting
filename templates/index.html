@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔐 Secure Biometric Voting System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            text-align: center;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .logo i {
+            font-size: 4rem;
+            color: #4ecdc4;
+        }
+        .logo h1 {
+            font-size: 4rem;
+            font-weight: bold;
+        }
+        .tagline {
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+        .login-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .login-btn {
+            display: block;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            text-decoration: none;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .login-btn:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+        .voter-btn:hover {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+        }
+        .admin-btn:hover {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+        }
+        .btn-content i {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+        .btn-content span {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 1rem;
+        }
+        .btn-content p {
+            opacity: 0.8;
+            font-size: 1.1rem;
+        }
+        .features {
+            margin-top: 4rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .feature i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #4ecdc4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            <h1>E-Vote Print</h1>
+        </div>
+        <p class="tagline">🗳️ Next-Genration Biometric Voting System</p>
+        
+        <div class="login-options">
+            <a href="{{ url_for('voter_login') }}" class="login-btn voter-btn">
+                <div class="btn-content">
+                    <i class="fas fa-user"></i>
+                    <span>VOTER LOGIN</span>
+                    <p>Cast your secure vote</p>
+                </div>
+            </a>
+            
+            <a href="{{ url_for('admin_login') }}" class="login-btn admin-btn">
+                <div class="btn-content">
+                    <i class="fas fa-user-shield"></i>
+                    <span>ADMIN LOGIN</span>
+                    <p>Manage election system</p>
+                </div>
+            </a>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-eye"></i>
+                <h3>Dual Biometric</h3>
+                <p>Face + Iris recognition</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-lock"></i>
+                <h3>Secure</h3>
+                <p>Encrypted voting</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-chart-bar"></i>
+                <h3>Real-time</h3>
+                <p>Live results</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-shield-check"></i>
+                <h3>Tamper-proof</h3>
+                <p>Audit trail</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

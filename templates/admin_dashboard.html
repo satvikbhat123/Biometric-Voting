@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - E-Vote Print</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+        .header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .logo h1 {
+            font-size: 1.5rem;
+        }
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .refresh-btn, .logout-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .refresh-btn:hover, .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .main-content {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        .stat-icon.votes {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+        }
+        .stat-icon.score {
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+        }
+        .stat-icon.parties {
+            background: linear-gradient(45deg, #fdcb6e, #e17055);
+        }
+        .stat-icon.security {
+            background: linear-gradient(45deg, #fd79a8, #e84393);
+        }
+        .stat-content h3 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        .stat-content p {
+            color: #666;
+            font-weight: 500;
+        }
+        .control-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        .control-panel h3 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+        .control-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .control-btn {
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .generate-btn {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+        }
+        .export-btn {
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+        }
+        .logs-btn {
+            background: linear-gradient(45deg, #fdcb6e, #e17055);
+        }
+        .danger-btn {
+            background: linear-gradient(45deg, #ff7675, #d63031);
+        }
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .results-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .results-section h3 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+        .results-table {
+            overflow-x: auto;
+        }
+        .results-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .results-table th,
+        .results-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .results-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+        .results-table tr:hover {
+            background: #f8f9fa;
+        }
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .status-badge.active {
+            background: #e6f7e1;
+            color: #00b894;
+        }
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            transition: width 0.3s ease;
+        }
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .control-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            <h1>E-VotePrint Admin</h1>
+        </div>
+        <div class="header-controls">
+            <span><i class="fas fa-user-shield"></i> Admin: {{ admin_user }}</span>
+            <button onclick="refreshData()" class="refresh-btn">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+            <a href="{{ url_for('logout') }}" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </header>
+    
+    <main class="main-content">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon votes">
+                    <i class="fas fa-vote-yea"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="totalVotes">{{ stats.total_votes }}</h3>
+                    <p>Total Votes Cast</p>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon score">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="avgScore">{{ "%.2f"|format(stats.avg_score) }}</h3>
+                    <p>Avg Verification Score</p>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon parties">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="partyCount">{{ stats.parties|length }}</h3>
+                    <p>Active Parties</p>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon security">
+                    <i class="fas fa-shield-check"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>High</h3>
+                    <p>Security Level</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="control-panel">
+            <h3>🎛️ System Controls</h3>
+            <div class="control-buttons">
+                <button onclick="generateResults()" class="control-btn generate-btn">
+                    <i class="fas fa-chart-bar"></i>
+                    Generate Full Reports
+                </button>
+                
+                <button onclick="exportData()" class="control-btn export-btn">
+                    <i class="fas fa-download"></i>
+                    Export Data
+                </button>
+                
+                <button onclick="viewLogs()" class="control-btn logs-btn">
+                    <i class="fas fa-file-alt"></i>
+                    View Audit Logs
+                </button>
+                
+                <button onclick="clearAllData()" class="control-btn danger-btn">
+                    <i class="fas fa-trash"></i>
+                    Clear All Data
+                </button>
+            </div>
+        </div>
+        
+        <div class="results-section">
+            <h3>📈 Live Results</h3>
+            <div class="results-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Party</th>
+                            <th>Votes</th>
+                            <th>Percentage</th>
+                            <th>Progress</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for party, votes in stats.parties.items() %}
+                        <tr>
+                            <td><strong>{{ party }}</strong></td>
+                            <td>{{ votes }}</td>
+                            <td>{{ "%.1f"|format((votes / stats.total_votes * 100) if stats.total_votes > 0 else 0) }}%</td>
+                            <td>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: {{ (votes / stats.total_votes * 100) if stats.total_votes > 0 else 0 }}%"></div>
+                                </div>
+                            </td>
+                            <td><span class="status-badge active">Active</span></td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #666; padding: 2rem;">
+                                No votes have been cast yet. Waiting for voters...
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        function refreshData() {
+            console.log('Refreshing data...');
+            location.reload();
+        }
+        
+        function generateResults() {
+            if (confirm('Generate comprehensive results and charts?')) {
+                fetch('/generate-results', {
+                    method: 'POST',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert('✅ Results generated successfully! Check the results folder for charts.');
+                    } else {
+                        throw new Error(data.error);
+                    }
+                })
+                .catch(error => {
+                    alert('❌ Error generating results: ' + error.message);
+                });
+            }
+        }
+        
+        function exportData() {
+            alert('📊 Export functionality coming soon! This will allow you to download voting data in various formats.');
+        }
+        
+        function viewLogs() {
+            alert('📋 Audit logs functionality coming soon! This will show detailed system activity logs.');
+        }
+        
+        function clearAllData() {
+            if (confirm('⚠️ This will permanently delete all voting data and biometric records. Are you absolutely sure?')) {
+                if (confirm('This action cannot be undone. Continue?')) {
+                    fetch('/clear-all-data', {
+                        method: 'POST',
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            alert('✅ All data cleared successfully!');
+                            location.reload();
+                        } else {
+                            throw new Error(data.error);
+                        }
+                    })
+                    .catch(error => {
+                        alert('❌ Error clearing data: ' + error.message);
+                    });
+                }
+            }
+        }
+        
+        // Auto-refresh every 30 seconds
+        setInterval(refreshData, 30000);
+    </script>
+</body>
+</html>

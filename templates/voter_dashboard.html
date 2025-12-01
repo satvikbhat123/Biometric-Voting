@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voter Dashboard - E-Vote Print</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+        .header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .logo h1 {
+            font-size: 1.5rem;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .main-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+        .voting-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .card-header h2 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+        .instructions {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        .instructions h3 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .instructions ol {
+            color: #555;
+            padding-left: 1.5rem;
+        }
+        .instructions li {
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+        .biometric-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .bio-feature {
+            text-align: center;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        .bio-feature:hover {
+            border-color: #4ecdc4;
+            transform: translateY(-5px);
+        }
+        .bio-feature i {
+            font-size: 3rem;
+            color: #4ecdc4;
+            margin-bottom: 1rem;
+        }
+        .vote-btn {
+            width: 100%;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            border: none;
+            padding: 2rem;
+            border-radius: 15px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+        .vote-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        .vote-btn i {
+            font-size: 2rem;
+        }
+        .vote-status {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+        }
+        .vote-status.success {
+            background: #e6f7e1;
+            color: #00b894;
+            border: 2px solid #00cec9;
+            display: block;
+        }
+        .vote-status.error {
+            background: #ffe6e6;
+            color: #d63031;
+            border: 2px solid #ff7675;
+            display: block;
+        }
+        .security-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        .security-panel h3 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .security-features {
+            display: grid;
+            gap: 1rem;
+        }
+        .security-feature {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: background 0.3s ease;
+        }
+        .security-feature:hover {
+            background: #e9ecef;
+        }
+        .security-feature i {
+            font-size: 1.5rem;
+            color: #4ecdc4;
+            width: 30px;
+            text-align: center;
+        }
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .biometric-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            <h1>E-VotePrint</h1>
+        </div>
+        <div class="user-info">
+            <span><i class="fas fa-user"></i> Welcome, {{ voter_name }}</span>
+            <a href="{{ url_for('logout') }}" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </header>
+    
+    <main class="main-content">
+        <div class="voting-card">
+            <div class="card-header">
+                <h2>🗳️ Cast Your Vote</h2>
+                <p>Secure biometric voting system</p>
+            </div>
+            
+            <div class="instructions">
+                <h3>📋 Voting Instructions</h3>
+                <ol>
+                    <li>Click the "Start Biometric Voting" button below</li>
+                    <li>Position yourself in front of the camera</li>
+                    <li>Follow on-screen instructions for face recognition</li>
+                    <li>Look directly at the camera for iris scanning</li>
+                    <li>Select your preferred candidate</li>
+                    <li>Confirm your vote</li>
+                </ol>
+            </div>
+            
+            <div class="biometric-info">
+                <div class="bio-feature">
+                    <i class="fas fa-face-smile"></i>
+                    <h4>Face Recognition</h4>
+                    <p>Advanced facial feature mapping</p>
+                </div>
+                <div class="bio-feature">
+                    <i class="fas fa-eye"></i>
+                    <h4>Iris Scanning</h4>
+                    <p>Unique iris pattern verification</p>
+                </div>
+            </div>
+            
+            <button onclick="startBiometricVoting()" class="vote-btn" id="voteBtn">
+                <i class="fas fa-fingerprint"></i>
+                START BIOMETRIC VOTING
+            </button>
+            
+            <div class="vote-status" id="voteStatus"></div>
+        </div>
+        
+        <div class="security-panel">
+            <h3>🔒 Your Privacy & Security</h3>
+            <div class="security-features">
+                <div class="security-feature">
+                    <i class="fas fa-user-secret"></i>
+                    <div>
+                        <strong>Anonymous Voting</strong>
+                        <p>Your identity is never linked to your vote</p>
+                    </div>
+                </div>
+                <div class="security-feature">
+                    <i class="fas fa-lock"></i>
+                    <div>
+                        <strong>Encrypted Storage</strong>
+                        <p>All data is encrypted and secure</p>
+                    </div>
+                </div>
+                <div class="security-feature">
+                    <i class="fas fa-shield-alt"></i>
+                    <div>
+                        <strong>Tamper-Proof</strong>
+                        <p>Blockchain-ready audit trail</p>
+                    </div>
+                </div>
+                <div class="security-feature">
+                    <i class="fas fa-eye-slash"></i>
+                    <div>
+                        <strong>No Vote Tracking</strong>
+                        <p>Your vote choice remains private</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        function startBiometricVoting() {
+            const btn = document.getElementById('voteBtn');
+            const status = document.getElementById('voteStatus');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Starting Biometric System...';
+            
+            fetch('/start-biometric-voting', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    status.className = 'vote-status success';
+                    status.innerHTML = '<i class="fas fa-check-circle"></i> Biometric voting system started! Follow the on-screen instructions.';
+                    
+                    btn.innerHTML = '<i class="fas fa-check"></i> SYSTEM STARTED';
+                    
+                    setTimeout(() => {
+                        location.reload();
+                    }, 30000);
+                } else {
+                    throw new Error(data.error || 'Unknown error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                status.className = 'vote-status error';
+                status.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error starting biometric system. Please try again.';
+                
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-fingerprint"></i> START BIOMETRIC VOTING';
+            });
+        }
+    </script>
+</body>
+</html>

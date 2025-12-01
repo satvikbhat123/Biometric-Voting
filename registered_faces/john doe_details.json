@@ -1,0 +1,9 @@
+{
+  "aadhar": "123456789012",
+  "dob": "2005-04-15",
+  "biometrics": [
+    "face",
+    "iris"
+  ],
+  "registration_date": "2025-11-30T00:30:15.825857"
+}
