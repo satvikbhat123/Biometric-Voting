@@ -521,7 +521,7 @@ def main():
     print("\n✅ Setup completed successfully!")
     print("="*60)
     print("📌 Next steps:")
-    print("1. Run: python web_app.py")
+    print("1. Run: python app.py")
     print("2. Open: http://localhost:5000")
     print("3. Demo credentials:")
     print("   • Voter: voter1 / password123")

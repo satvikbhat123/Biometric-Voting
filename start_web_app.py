@@ -25,7 +25,7 @@ def start_application():
     
     try:
         # Start the web application
-        subprocess.run([sys.executable, "web_app.py"])
+        subprocess.run([sys.executable, "app.py"])
     except KeyboardInterrupt:
         print("\n👋 Application stopped by user")
     except Exception as e:
